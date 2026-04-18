@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Crossings at Carlsbad — Game Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #1a2e1a;
+    --green-mid: #2d5a27;
+    --green-bright: #4a8c3f;
+    --green-light: #7dc06b;
+    --sand: #d4b483;
+    --sand-light: #f0e3c8;
+    --sky: #b8d4e8;
+    --water: #2a6496;
+    --white: #f8f5ef;
+    --danger: #c0392b;
+    --caution: #e67e22;
+    --safe: #27ae60;
+    --text: #1a1a1a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--green-deep);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 4rem 3rem;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 80% 20%, rgba(74,140,63,0.25) 0%, transparent 60%),
+      radial-gradient(ellipse at 10% 80%, rgba(42,100,150,0.2) 0%, transparent 50%),
+      linear-gradient(160deg, #0d1f0d 0%, #1a2e1a 40%, #0d1a2e 100%);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 60px,
+        rgba(74,140,63,0.04) 60px,
+        rgba(74,140,63,0.04) 61px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 60px,
+        rgba(74,140,63,0.04) 60px,
+        rgba(74,140,63,0.04) 61px
+      );
+  }
+
+  .hero-badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--green-light);
+    border: 1px solid var(--green-light);
+    padding: 0.35rem 0.85rem;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--green-light);
+  }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    font-weight: 300;
+    color: rgba(248,245,239,0.6);
+    letter-spacing: 0.05em;
+    max-width: 500px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+
+  .hero-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .hero-stat-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--sand);
+  }
+
+  .hero-stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(248,245,239,0.45);
+  }
+
+  /* SCROLL ARROW */
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    right: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeIn 1s ease 1.2s forwards;
+  }
+
+  .scroll-hint span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: rgba(248,245,239,0.3);
+    writing-mode: vertical-rl;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--green-light), transparent);
+    animation: pulse 2s ease infinite;
+  }
+
+  /* BAG SECTION */
+  .bag-section {
+    background: var(--green-deep);
+    padding: 4rem 3rem;
+    border-top: 1px solid rgba(74,140,63,0.2);
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--green-light);
+    margin-bottom: 2rem;
+  }
+
+  .bag-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1px;
+    background: rgba(74,140,63,0.15);
+    border: 1px solid rgba(74,140,63,0.15);
+    max-width: 900px;
+  }
+
+  .club-card {
+    background: rgba(26,46,26,0.8);
+    padding: 1.25rem 1rem;
+    text-align: center;
+    transition: background 0.2s;
+  }
+
+  .club-card:hover {
+    background: rgba(45,90,39,0.5);
+  }
+
+  .club-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(248,245,239,0.45);
+    margin-bottom: 0.5rem;
+  }
+
+  .club-dist {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--sand);
+  }
+
+  .club-unit {
+    font-size: 0.7rem;
+    color: rgba(248,245,239,0.4);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* MAP SECTION */
+  .map-section {
+    padding: 4rem 3rem;
+    background: linear-gradient(180deg, var(--green-deep) 0%, #0d1a14 100%);
+    border-top: 1px solid rgba(74,140,63,0.2);
+  }
+
+  .map-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .map-subtitle {
+    font-size: 0.85rem;
+    color: rgba(248,245,239,0.5);
+    margin-bottom: 2rem;
+  }
+
+  .map-embed-wrap {
+    position: relative;
+    border: 1px solid rgba(74,140,63,0.3);
+    overflow: hidden;
+    max-width: 900px;
+  }
+
+  .map-embed-wrap iframe {
+    display: block;
+    width: 100%;
+    height: 480px;
+    border: none;
+    filter: saturate(0.8) brightness(0.85) hue-rotate(10deg);
+    transition: filter 0.3s;
+  }
+
+  .map-embed-wrap:hover iframe {
+    filter: saturate(1) brightness(0.95) hue-rotate(0deg);
+  }
+
+  .map-caption {
+    margin-top: 0.75rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    color: rgba(248,245,239,0.3);
+  }
+
+  /* HOLES SECTION */
+  .holes-section {
+    padding: 4rem 3rem;
+    background: #0d1a14;
+    border-top: 1px solid rgba(74,140,63,0.2);
+  }
+
+  .holes-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .nine-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sand);
+    margin: 3rem 0 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(212,180,131,0.2);
+  }
+
+  .hole-grid {
+    display: grid;
+    gap: 1.5rem;
+    max-width: 980px;
+  }
+
+  .hole-card {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    border: 1px solid rgba(74,140,63,0.2);
+    transition: border-color 0.25s, transform 0.25s;
+    cursor: default;
+  }
+
+  .hole-card:hover {
+    border-color: rgba(74,140,63,0.6);
+    transform: translateX(4px);
+  }
+
+  .hole-number-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 0.75rem;
+    gap: 0.25rem;
+    border-right: 1px solid rgba(74,140,63,0.2);
+  }
+
+  .hole-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--white);
+  }
+
+  .hole-par-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: rgba(248,245,239,0.4);
+  }
+
+  .hole-par-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--green-light);
+  }
+
+  .hole-body {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .hole-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .hole-yardage {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--sand);
+  }
+
+  .hole-yardage span {
+    font-size: 0.75rem;
+    font-family: 'DM Mono', monospace;
+    color: rgba(212,180,131,0.5);
+    font-weight: 400;
+  }
+
+  .hole-diff-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+  }
+
+  .diff-hard { background: rgba(192,57,43,0.2); color: #e74c3c; border: 1px solid rgba(192,57,43,0.4); }
+  .diff-medium { background: rgba(230,126,34,0.15); color: #e67e22; border: 1px solid rgba(230,126,34,0.3); }
+  .diff-easy { background: rgba(39,174,96,0.15); color: #2ecc71; border: 1px solid rgba(39,174,96,0.3); }
+
+  .green-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    background: rgba(74,140,63,0.15);
+    color: var(--green-light);
+    border: 1px solid rgba(74,140,63,0.3);
+  }
+
+  .strategy-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .strategy-row {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 0.75rem;
+    font-size: 0.82rem;
+  }
+
+  .strategy-key {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(248,245,239,0.35);
+    padding-top: 0.1rem;
+  }
+
+  .strategy-val {
+    color: rgba(248,245,239,0.8);
+    line-height: 1.5;
+  }
+
+  .strategy-val strong {
+    color: var(--green-light);
+    font-weight: 500;
+  }
+
+  .strategy-val .warn {
+    color: #e67e22;
+  }
+
+  .strategy-val .danger {
+    color: #e74c3c;
+  }
+
+  .divider-nine {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 4rem 0 2rem;
+    max-width: 980px;
+  }
+
+  .divider-nine::before, .divider-nine::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(74,140,63,0.2);
+  }
+
+  .divider-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: rgba(248,245,239,0.25);
+  }
+
+  /* SCORECARD TABLE */
+  .scorecard-section {
+    padding: 4rem 3rem;
+    background: var(--green-deep);
+    border-top: 1px solid rgba(74,140,63,0.2);
+    overflow-x: auto;
+  }
+
+  .scorecard-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .sc-desc {
+    font-size: 0.82rem;
+    color: rgba(248,245,239,0.45);
+    margin-bottom: 2rem;
+  }
+
+  .scorecard-table {
+    border-collapse: collapse;
+    min-width: 700px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+  }
+
+  .scorecard-table th {
+    padding: 0.6rem 1rem;
+    text-align: center;
+    border: 1px solid rgba(74,140,63,0.2);
+    background: rgba(45,90,39,0.4);
+    letter-spacing: 0.1em;
+    color: var(--green-light);
+    white-space: nowrap;
+  }
+
+  .scorecard-table td {
+    padding: 0.55rem 1rem;
+    text-align: center;
+    border: 1px solid rgba(74,140,63,0.12);
+    color: rgba(248,245,239,0.75);
+    white-space: nowrap;
+  }
+
+  .scorecard-table tr:hover td {
+    background: rgba(74,140,63,0.07);
+  }
+
+  .sc-club-used {
+    color: var(--sand) !important;
+    font-weight: 500;
+  }
+
+  .sc-hole-num {
+    color: var(--white) !important;
+    font-weight: 500;
+  }
+
+  /* LEGEND */
+  .legend-section {
+    padding: 3rem 3rem;
+    background: #0d1a14;
+    border-top: 1px solid rgba(74,140,63,0.2);
+  }
+
+  .legend-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.8rem;
+    color: rgba(248,245,239,0.6);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 2.5rem 3rem;
+    background: var(--green-deep);
+    border-top: 1px solid rgba(74,140,63,0.15);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: rgba(248,245,239,0.4);
+  }
+
+  .footer-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: rgba(248,245,239,0.2);
+    text-align: right;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .hero, .bag-section, .map-section, .holes-section, .scorecard-section, .legend-section, footer {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+    .hole-card {
+      grid-template-columns: 70px 1fr;
+    }
+    .strategy-row {
+      grid-template-columns: 60px 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-badge">Personal Game Plan • 2025</div>
+  <h1 class="hero-title">The <em>Crossings</em><br>at Carlsbad</h1>
+  <p class="hero-sub">A hole-by-hole strategic guide built around your bag — target lines, club selections, green reads, and hazard warnings for all 18.</p>
+  <div class="hero-meta">
+    <div class="hero-stat">
+      <div class="hero-stat-val">6,467</div>
+      <div class="hero-stat-label">Blue Tee Yards</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">72</div>
+      <div class="hero-stat-label">Par</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">71.0</div>
+      <div class="hero-stat-label">Course Rating</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">129</div>
+      <div class="hero-stat-label">Slope</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">2007</div>
+      <div class="hero-stat-label">Greg Nash Design</div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</header>
+
+<!-- YOUR BAG -->
+<section class="bag-section">
+  <div class="section-label">▸ Your Bag</div>
+  <div class="bag-grid">
+    <div class="club-card">
+      <div class="club-name">Driver</div>
+      <div class="club-dist">250</div>
+      <div class="club-unit">yards</div>
+    </div>
+    <div class="club-card">
+      <div class="club-name">4 Hybrid</div>
+      <div class="club-dist">210</div>
+      <div class="club-unit">yards</div>
+    </div>
+    <div class="club-card">
+      <div class="club-name">7 Iron</div>
+      <div class="club-dist">155</div>
+      <div class="club-unit">yards</div>
+    </div>
+    <div class="club-card">
+      <div class="club-name">8 Iron</div>
+      <div class="club-dist">145</div>
+      <div class="club-unit">yards</div>
+    </div>
+    <div class="club-card">
+      <div class="club-name">9 Iron</div>
+      <div class="club-dist">135</div>
+      <div class="club-unit">yards</div>
+    </div>
+    <div class="club-card">
+      <div class="club-name">PW</div>
+      <div class="club-dist">125</div>
+      <div class="club-unit">yards</div>
+    </div>
+    <div class="club-card">
+      <div class="club-name">GW</div>
+      <div class="club-dist">100</div>
+      <div class="club-unit">yards</div>
+    </div>
+    <div class="club-card">
+      <div class="club-name">Sand W</div>
+      <div class="club-dist">70</div>
+      <div class="club-unit">yards</div>
+    </div>
+  </div>
+</section>
+
+<!-- MAP -->
+<section class="map-section">
+  <div class="section-label">▸ Course Overview</div>
+  <h2 class="map-title">5800 The Crossings Drive, Carlsbad CA 92008</h2>
+  <p class="map-subtitle">Located ~1 mile from the Pacific Ocean, 30 min north of San Diego. Canyon terrain, coastal breeze from the west.</p>
+  <div class="map-embed-wrap">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3319.7!2d-117.2857!3d33.1582!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80dc72b2f8e4e3d7%3A0x1b4c6c7f3e5a1234!2sThe%20Crossings%20at%20Carlsbad!5e1!3m2!1sen!2sus!4v1"
+      allowfullscreen=""
+      loading="lazy"
+      title="The Crossings at Carlsbad Map">
+    </iframe>
+  </div>
+  <p class="map-caption">▸ Satellite view — course runs northwest through canyon/wetland terrain with Pacific views. Prevailing wind from W/NW.</p>
+</section>
+
+<!-- HOLES -->
+<section class="holes-section">
+  <div class="section-label">▸ Hole-by-Hole Game Plan</div>
+  <h2>Strategic Guide — Blue Tees</h2>
+
+  <div class="nine-label">Front Nine</div>
+  <div class="hole-grid">
+
+    <!-- HOLE 1 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">1</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">4</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">416 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-medium">HDCP 7</span>
+          <span class="green-tag">Tiered Green</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val">Hit <strong>Driver</strong> (250 yds). Aim center-right — there is plenty of room on the right side. <span class="warn">Do NOT cut the corner left</span> (bunker is your target marker, not a line to carry). This is target golf — put it in play.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Remain</div>
+            <div class="strategy-val">~166 yds out. Hit <strong>7 Iron</strong> (155 yds). The coastal downhill lie may play shorter — club up if pin is past the middle ridge. <span class="warn">Green has a ridge across center</span>: use extra club when pin is on the far tier.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Avoid</div>
+            <div class="strategy-val">Left bunker off the tee. Approach bunkers flanking the green. Short-siding yourself on the wrong tier adds a full extra putt.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOLE 2 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">2</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">4</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">344 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-easy">HDCP 11</span>
+          <span class="green-tag">Single Tier</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val">This is a shorter par 4 — <span class="warn">do not grip and rip</span>. Use <strong>4 Hybrid</strong> (210 yds) or even a long iron to keep it in the fairway. At 344 yards you have room to be aggressive later.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Remain</div>
+            <div class="strategy-val">~134 yds. Hit <strong>9 Iron</strong> (135 yds). Watch the coastal breeze — it will affect high-lofted club trajectory. Aim center of green.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Avoid</div>
+            <div class="strategy-val">Overswinging off the tee is the main danger. Wind-affected short irons can balloon — take one extra club and swing smooth.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOLE 3 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">3</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">4</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">380 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-hard">HDCP 3</span>
+          <span class="green-tag">Elevated Green</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val">Hardest par 4 on the front. <strong>Driver</strong> (250 yds) but controlled. The canyon drops off — <span class="danger">pay attention to the yardage to the canyon in front of you</span>. Don't be hero from an awkward lie.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Remain</div>
+            <div class="strategy-val">~130 yds uphill. Hit <strong>8 Iron</strong> (145 yds) — the uphill lie to the green means it will play like 145+. The approach tends to play a club longer because of the elevation gain. Coastal breeze headwind adds another half club.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Avoid</div>
+            <div class="strategy-val"><span class="danger">Canyon short of the green</span> — the #1 scoring hazard here. When in doubt, take MORE club. Drop area is behind back-left of green.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOLE 4 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">4</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">3</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">195 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-medium">HDCP 13</span>
+          <span class="green-tag">Split / Hidden Green</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val">A tricky par 3. Use <strong>4 Hybrid</strong> (210 yds) — the green is hidden behind a <span class="warn">large mound in the front center</span>. The green is split into two sides; check the pin location board on the tee box carefully.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Wind</div>
+            <div class="strategy-val">The prevailing coastal breeze can push the ball right. Factor in a half-club for wind and aim slightly left of the flag if it's on the right side.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Avoid</div>
+            <div class="strategy-val">The mound short of the green — it can funnel miss-hits sideways. Go after the correct side of the green; a front-left pin is not the same as a back-right pin here.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOLE 5 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">5</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">5</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">567 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-medium">HDCP 5</span>
+          <span class="green-tag">Single Tier</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val"><strong>Driver</strong> (250 yds). Reachable in 3 if you play smart. There are <span class="warn">pot bunkers dividing the fairway</span> — the left side is shorter and tighter; the right side gives a better angle to the green. Take the right side.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">2nd</div>
+            <div class="strategy-val">~317 yds remain. Lay up with <strong>4 Hybrid</strong> (210 yds) to ~107 yds. Avoid the pot bunkers in the center of the fairway at your second shot distance.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">3rd</div>
+            <div class="strategy-val">~107 yds. <strong>Gap Wedge</strong> (100 yds) or Sand Wedge — uphill and into coastal breeze may require an extra club. Aim center, avoid greenside bunkers.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOLE 6 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">6</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">4</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">430 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-hard">HDCP 1</span>
+          <span class="green-tag">Tiered Green</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val">The #1 handicap hole — toughest on the course. <strong>Driver</strong> (250 yds). The <span class="danger">target bunker is your aim point</span>; don't cut the corner. Be aware of the prevailing breeze pushing left-to-right.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Remain</div>
+            <div class="strategy-val">~180 yds. This is between your 4-Hybrid (210) and 7-iron (155) — hit a controlled smooth <strong>4 Hybrid</strong> with a three-quarter swing (~175 yds). Check the pin location: shot to the correct tier is critical here. Uphill and into coastal breeze adds 1–2 clubs.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Avoid</div>
+            <div class="strategy-val"><span class="danger">Wrong tier approach</span> — being on the wrong level adds 3 putts fast. Don't leave it short; wind plays tricks here.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOLE 7 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">7</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">5</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">546 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-medium">HDCP 9</span>
+          <span class="green-tag">Single Tier</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val"><strong>Driver</strong> (250 yds). Lots of room on the right side of the fairway. An easy lay-up strategy makes this hole manageable — don't try to be a hero.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">2nd</div>
+            <div class="strategy-val">~296 yds remain. <strong>4 Hybrid</strong> (210 yds) layup leaves ~86 yds in. Good position for a wedge.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">3rd</div>
+            <div class="strategy-val">~86 yds. <strong>Sand Wedge</strong> (70 yds) or <strong>Gap Wedge</strong> (100 yds) — judge by lie. Choose your club carefully on the approach to the right corner of the lake/hazard. <span class="danger">Water comes into play near the green</span>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOLE 8 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">8</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">4</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">289 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-easy">HDCP 15</span>
+          <span class="green-tag">Single Tier</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val">Short par 4 — <span class="warn">forget about being a big hitter</span>. Club selection is everything. Use <strong>4 Hybrid</strong> (210 yds) or even less — leaves only ~79 yds in for a wedge.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Remain</div>
+            <div class="strategy-val">~79 yds. <strong>Sand Wedge</strong> (70 yds) or a controlled Gap Wedge. Watch how the coastal breeze affects a high-lofted shot at this short distance.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Avoid</div>
+            <div class="strategy-val">Bombing driver into trouble. This hole is a scoring opportunity — take the conservative route and collect a par or birdie chance.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOLE 9 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">9</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">3</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">113 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-easy">HDCP 17</span>
+          <span class="green-tag">Narrow / Slopes Away</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val">Short par 3. Use <strong>Pitching Wedge</strong> (125 yds) with a three-quarter swing. Check the wind and pin location carefully — <span class="warn">as the green goes to the back it slopes away slightly and narrows</span>.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Green</div>
+            <div class="strategy-val">Back-pin adds complexity — the green narrows and tilts away, so a ball going too far easily runs off. Aim center/front on back pin positions.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Avoid</div>
+            <div class="strategy-val">Overclubbing runs you off the back of a narrowing green. Sand bunkers flank the green. Take dead aim at the center and let your wedge spin hold the green.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end front nine -->
+
+  <div class="divider-nine">
+    <div class="divider-text">— Turn —</div>
+  </div>
+
+  <div class="nine-label">Back Nine</div>
+  <div class="hole-grid">
+
+    <!-- HOLE 10 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">10</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">4</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">319 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-easy">HDCP 12</span>
+          <span class="green-tag">Single Tier</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val">Good scoring opportunity to open the back nine. <strong>4 Hybrid</strong> (210 yds) takes driver out of the equation and leaves ~109 yds in. Or lay back with a 7 iron and enjoy the back-nine views.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Remain</div>
+            <div class="strategy-val">~109 yds. <strong>Gap Wedge</strong> (100 yds) or PW. Lots of room right off the tee — this is a confidence builder. Aim center and attack.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Avoid</div>
+            <div class="strategy-val">Wasting the birdie opportunity by overswinging. This is a reset hole — start the back nine in control.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOLE 11 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">11</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">4</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">374 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-medium">HDCP 10</span>
+          <span class="green-tag">Undulating</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val"><strong>Driver</strong> (250 yds). Elevation changes are significant on the back nine — this hole has dramatic undulation. Keep it in the short grass.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Remain</div>
+            <div class="strategy-val">~124 yds. <strong>Pitching Wedge</strong> (125 yds). Check for any elevation adjustment — a downhill approach might play 5–10 yds shorter. Green is undulating; aim at the fat part of the green.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Avoid</div>
+            <div class="strategy-val">Canyon edges and native scrub on either side. This course is target golf — miss in the middle, not on the edges.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOLE 12 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">12</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">4</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">421 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-hard">HDCP 4</span>
+          <span class="green-tag">Multi-Tier</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val">Second toughest hole on the back. <strong>Driver</strong> (250 yds). Canyon and wetland terrain — water or sand comes into play. Keep the ball in the fairway above all else.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Remain</div>
+            <div class="strategy-val">~171 yds. This is between 7-iron (155) and 4-hybrid (210). Take the <strong>4 Hybrid</strong> with a smooth swing targeting ~170 yds. Aim for center of the green — the tiered green punishes the wrong level severely.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Avoid</div>
+            <div class="strategy-val"><span class="danger">Water and sand come into play on almost every shot</span> here. Don't chase pins. Bogey is perfectly fine on this hole.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOLE 13 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">13</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">4</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">330 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-easy">HDCP 16</span>
+          <span class="green-tag">Single Tier</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val">Short par 4 — another scoring chance. <strong>4 Hybrid</strong> (210 yds) leaves ~120 yds in. Playing a conservative tee shot is smart; wet/canyon conditions can make driver riskier than the 80 extra yards warrant.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Remain</div>
+            <div class="strategy-val">~120 yds. <strong>Pitching Wedge</strong> (125 yds) with slight finesse. Aim center green.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Avoid</div>
+            <div class="strategy-val">Canyon or native vegetation that flanks the canyon-terrain holes on this nine. Lay it up and take your par/birdie.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOLE 14 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">14</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">3</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">125 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-easy">HDCP 18</span>
+          <span class="green-tag">Flat / Easiest</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val">The easiest hole on the course. <strong>Pitching Wedge</strong> (125 yds) — a full PW right at the pin. Check the wind first; coastal breeze can affect even short par 3s.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Green</div>
+            <div class="strategy-val">Aim center of the green and go for the birdie. This is your best chance at a 2 on the entire round.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Avoid</div>
+            <div class="strategy-val">Overcomplicating it. Pick a target, commit, and swing freely. Don't think — just execute.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOLE 15 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">15</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">5</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">520 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-medium">HDCP 6</span>
+          <span class="green-tag">Multi-Tier</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val"><strong>Driver</strong> (250 yds). Canyon terrain and wetlands — keep it in play. Sagebrush and native flora line the edges; treat them as penalty zones.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">2nd</div>
+            <div class="strategy-val">~270 yds remain. <strong>4 Hybrid</strong> (210 yds) lays up to ~60 yds. Or play Driver + aggressive lay-up to 100 yds.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">3rd</div>
+            <div class="strategy-val">~60–100 yds. <strong>Gap Wedge</strong> or Sand Wedge. Aim at the correct tier. The multiple pin positions on a 520-yard hole mean tier placement is crucial.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOLE 16 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">16</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">5</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">550 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-medium">HDCP 8</span>
+          <span class="green-tag">Single Tier</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val"><strong>Driver</strong> (250 yds). Classic three-shot par 5 with gorgeous Pacific Ocean views. Play for position — <span class="warn">prevailing coastal breeze tries to push your tee ball right</span>.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">2nd</div>
+            <div class="strategy-val">~300 yds remain. <strong>4 Hybrid</strong> (210 yds) to ~90 yds. Fairway bunkers may come into play — stay left of center on the second shot.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">3rd</div>
+            <div class="strategy-val">~90 yds. <strong>Gap Wedge</strong> (100 yds) with a smooth swing. Pacific vista here is stunning — enjoy it, then execute.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOLE 17 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">17</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">3</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">167 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-medium">HDCP 14</span>
+          <span class="green-tag">Elevated / Trees</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val">Longer par 3. Plays between your 7 iron (155) and 4 hybrid (210). Hit a controlled <strong>4 Hybrid</strong> with an easy swing (~165-170 yds). Wind direction is critical here.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Green</div>
+            <div class="strategy-val">Green is elevated and framed by trees and bunkers. <span class="warn">Miss left or short</span> rather than right (trees) or long (run-off). Aim center-left.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Avoid</div>
+            <div class="strategy-val">Greenside bunkers (right and back). Short is recoverable; buried in a bunker right is not. When in doubt, take an extra half-club.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOLE 18 -->
+    <div class="hole-card">
+      <div class="hole-number-block">
+        <div class="hole-num">18</div>
+        <div class="hole-par-tag">PAR</div>
+        <div class="hole-par-val">4</div>
+      </div>
+      <div class="hole-body">
+        <div class="hole-header">
+          <div class="hole-yardage">381 <span>yds (Blue)</span></div>
+          <span class="hole-diff-tag diff-hard">HDCP 2</span>
+          <span class="green-tag">Severely Undulating</span>
+        </div>
+        <div class="strategy-rows">
+          <div class="strategy-row">
+            <div class="strategy-key">Tee</div>
+            <div class="strategy-val">The toughest finishing hole. <span class="danger">Bunkers left, canyon right</span> off the tee. Hit <strong>Driver</strong> but aim center — the coastal breeze makes this tee shot one of the most intimidating on the course. Do NOT chase the left bunker.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Remain</div>
+            <div class="strategy-val">~131 yds. <strong>9 Iron</strong> (135 yds). The green is severely undulating and framed by trees and bunkers — aim the middle of the green and accept a par. The green's slope creates brutal 3-putt potential.</div>
+          </div>
+          <div class="strategy-row">
+            <div class="strategy-key">Avoid</div>
+            <div class="strategy-val"><span class="danger">Canyon right off the tee</span> (penalty), bunkers left of tee. Short-siding yourself near the greenside trees. Play this hole like a bogey is a win and a par is a victory lap.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end back nine -->
+</section>
+
+<!-- SCORECARD SUMMARY -->
+<section class="scorecard-section">
+  <div class="section-label">▸ Quick Reference Scorecard</div>
+  <h2>Club Recommendations — Blue Tees</h2>
+  <p class="sc-desc">Approximate distances based on your bag. Always adjust ±1 club for coastal breeze, elevation, and pin position.</p>
+  <table class="scorecard-table">
+    <thead>
+      <tr>
+        <th>Hole</th>
+        <th>Par</th>
+        <th>Yds (Blue)</th>
+        <th>HDCP</th>
+        <th>Tee Club</th>
+        <th>Approach</th>
+        <th>Green Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="sc-hole-num">1</td><td>4</td><td>416</td><td>7</td><td class="sc-club-used">Driver</td><td class="sc-club-used">7 Iron</td><td>Tiered — read the ridge</td></tr>
+      <tr><td class="sc-hole-num">2</td><td>4</td><td>344</td><td>11</td><td class="sc-club-used">4 Hybrid</td><td class="sc-club-used">9 Iron</td><td>Watch wind on short iron</td></tr>
+      <tr><td class="sc-hole-num">3</td><td>4</td><td>380</td><td>3</td><td class="sc-club-used">Driver</td><td class="sc-club-used">8 Iron +1</td><td>Canyon short — take extra club</td></tr>
+      <tr><td class="sc-hole-num">4</td><td>3</td><td>195</td><td>13</td><td class="sc-club-used">4 Hybrid</td><td>—</td><td>Hidden behind mound; split green</td></tr>
+      <tr><td class="sc-hole-num">5</td><td>5</td><td>567</td><td>5</td><td class="sc-club-used">Driver</td><td class="sc-club-used">GW / SW</td><td>3-shot hole; avoid pot bunkers</td></tr>
+      <tr><td class="sc-hole-num">6</td><td>4</td><td>430</td><td>1</td><td class="sc-club-used">Driver</td><td class="sc-club-used">4 Hybrid (soft)</td><td>#1 hdcp — aim correct tier</td></tr>
+      <tr><td class="sc-hole-num">7</td><td>5</td><td>546</td><td>9</td><td class="sc-club-used">Driver</td><td class="sc-club-used">SW / GW</td><td>Water near green — smart layup</td></tr>
+      <tr><td class="sc-hole-num">8</td><td>4</td><td>289</td><td>15</td><td class="sc-club-used">4 Hybrid</td><td class="sc-club-used">Sand Wedge</td><td>Scoring hole — be conservative tee</td></tr>
+      <tr><td class="sc-hole-num">9</td><td>3</td><td>113</td><td>17</td><td class="sc-club-used">PW (3/4)</td><td>—</td><td>Narrows at back; slopes away</td></tr>
+      <tr><td class="sc-hole-num">10</td><td>4</td><td>319</td><td>12</td><td class="sc-club-used">4 Hybrid</td><td class="sc-club-used">GW</td><td>Birdie opportunity — reset hole</td></tr>
+      <tr><td class="sc-hole-num">11</td><td>4</td><td>374</td><td>10</td><td class="sc-club-used">Driver</td><td class="sc-club-used">PW</td><td>Undulating — aim fat of green</td></tr>
+      <tr><td class="sc-hole-num">12</td><td>4</td><td>421</td><td>4</td><td class="sc-club-used">Driver</td><td class="sc-club-used">4 Hybrid (soft)</td><td>Water/sand — bogey is fine</td></tr>
+      <tr><td class="sc-hole-num">13</td><td>4</td><td>330</td><td>16</td><td class="sc-club-used">4 Hybrid</td><td class="sc-club-used">PW</td><td>Easy scoring chance</td></tr>
+      <tr><td class="sc-hole-num">14</td><td>3</td><td>125</td><td>18</td><td class="sc-club-used">PW</td><td>—</td><td>Easiest hole — go for birdie</td></tr>
+      <tr><td class="sc-hole-num">15</td><td>5</td><td>520</td><td>6</td><td class="sc-club-used">Driver</td><td class="sc-club-used">GW / SW</td><td>Canyon/wetlands — play safe</td></tr>
+      <tr><td class="sc-hole-num">16</td><td>5</td><td>550</td><td>8</td><td class="sc-club-used">Driver</td><td class="sc-club-used">GW</td><td>Breeze pushes right — aim left</td></tr>
+      <tr><td class="sc-hole-num">17</td><td>3</td><td>167</td><td>14</td><td class="sc-club-used">4 Hybrid (soft)</td><td>—</td><td>Aim center-left; avoid trees R</td></tr>
+      <tr><td class="sc-hole-num">18</td><td>4</td><td>381</td><td>2</td><td class="sc-club-used">Driver</td><td class="sc-club-used">9 Iron</td><td>Canyon R / bunker L — aim center</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- LEGEND -->
+<section class="legend-section">
+  <div class="section-label">▸ Legend</div>
+  <div class="legend-grid">
+    <div class="legend-item"><div class="legend-dot" style="background:#e74c3c;"></div>DANGER — hazard or penalty area</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e67e22;"></div>CAUTION — wind or tricky green</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#2ecc71;"></div>SCORING OPPORTUNITY</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d4b483;"></div>RECOMMENDED CLUB</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#4a8c3f;"></div>TIERED / MULTI-LEVEL GREEN</div>
+  </div>
+  <p style="margin-top:2rem; font-size:0.78rem; color:rgba(248,245,239,0.35); max-width:600px; line-height:1.7; font-family:'DM Mono',monospace;">
+    Yardages shown from Blue tees (6,467 yds, CR 71.0, Slope 129). Course designed by Greg Nash, ASGCA. Always check pin sheets and ask the starter about local rules on canyon drops. Coastal wind from W/NW — factor ±1 club on exposed shots.
+  </p>
+</section>
+
+<footer>
+  <div class="footer-brand">The Crossings at Carlsbad</div>
+  <div class="footer-note">
+    5800 The Crossings Drive · Carlsbad, CA 92008 · (760) 444-1800<br>
+    Personal game plan — blue tees · par 72 · 6,467 yards
+  </div>
+</footer>
+
+</body>
+</html>
